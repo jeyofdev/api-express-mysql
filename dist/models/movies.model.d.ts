@@ -1,6 +1,6 @@
 import { RowDataPacket } from 'mysql2';
-interface IMovie extends RowDataPacket {
-    id: number;
+export interface IMovie extends RowDataPacket {
+    id?: number;
     title: string;
     director: string;
     year: number;
@@ -8,6 +8,7 @@ interface IMovie extends RowDataPacket {
     duration: number;
     type: string;
 }
-export declare const findAll: () => Promise<[IMovie[], import("mysql2/typings/mysql/lib/protocol/packets/FieldPacket")[]]>;
-export declare const findById: (id: string) => Promise<[IMovie[], import("mysql2/typings/mysql/lib/protocol/packets/FieldPacket")[]]>;
-export {};
+export declare const findAll: () => Promise<IMovie[]>;
+export declare const findById: (id: string) => Promise<IMovie>;
+export declare const findByTitle: (title: string) => Promise<IMovie>;
+export declare const save: ({ title, director, year, rating, duration, type, }: IMovie) => Promise<number>;

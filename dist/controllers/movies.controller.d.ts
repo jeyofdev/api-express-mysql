@@ -4,3 +4,4 @@ import { Request, Response } from 'express';
  */
 export declare const findAllMovies: (req: Request, res: Response) => void;
 export declare const findMovieById: (req: Request, res: Response) => void;
+export declare const saveMovie: (req: Request, res: Response) => void;
