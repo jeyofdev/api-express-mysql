@@ -1,12 +1,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import dbConnection from './config/db.config.js';
+import routes from './routes/index.js';
 
 dotenv.config();
 
 // Config
 const PORT = process.env.PORT || 3000;
 const app = express();
+app.use('/api', routes);
 
 // Database connect
 dbConnection.connect((err) => {
@@ -22,8 +24,13 @@ dbConnection.connect((err) => {
 });
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.status(200).json({ message: 'Welcome to API' });
+});
+
+// Route 404
+app.use((_, res) => {
+  res.status(404).send({ error: 'Route not found' });
 });
 
 // Listen
