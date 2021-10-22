@@ -56,3 +56,12 @@ export const save = ({
       [title, director, year, rating, duration, type]
     )
     .then((result) => result[0].insertId);
+
+/*
+ * Delete movie by Id
+ */
+export const deleteById = (id: string) =>
+  dbConnection
+    .promise()
+    .query<ResultSetHeader>('DELETE FROM movie WHERE id = ?', [id])
+    .then((result) => result[0]);

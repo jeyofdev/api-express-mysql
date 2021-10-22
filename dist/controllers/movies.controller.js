@@ -1,4 +1,4 @@
-import { findAll, findById, findByTitle, save, } from '../models/movies.model.js';
+import { deleteById, findAll, findById, findByTitle, save, } from '../models/movies.model.js';
 /**
  * Get all movies
  */
@@ -61,7 +61,31 @@ export const saveMovie = (req, res) => {
                 .json({ message: 'This film is already in the database' });
         }
         else {
-            res.status(500).send('Error saving the movie');
+            res.status(500).send({ error: 'Error saving the movie' });
+        }
+    });
+};
+/*
+ * Delete movie by Id
+ */
+export const deleteMovieById = (req, res) => {
+    const { id } = req.params;
+    deleteById(id)
+        .then((result) => {
+        if (result.affectedRows < 1) {
+            return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors
+        }
+        return res.status(200).json({
+            message: 'Movie deleting successfully',
+            result,
+        });
+    })
+        .catch((err) => {
+        if (err === 'NO_MOVIE_FOUND') {
+            res.status(200).send({ message: 'Movie not found' });
+        }
+        else {
+            res.status(500).send({ error: 'Error deleting an user' });
         }
     });
 };
