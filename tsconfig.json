@@ -13,5 +13,11 @@
     "moduleResolution": "node"
   },
   "files": ["src/index.ts"],
-  "include": ["src/types/**/*", "src/config/**/*", "src/routes/**/*"]
+  "include": [
+    "src/types/**/*",
+    "src/config/**/*",
+    "src/routes/**/*",
+    "src/models/**/*",
+    "src/controllers/**/*"
+  ]
 }
