@@ -1731,7 +1731,7 @@ ms@^2.1.1:
 
 mysql2@^2.3.2:
   version "2.3.2"
-  resolved "https://registry.npmjs.org/mysql2/-/mysql2-2.3.2.tgz"
+  resolved "https://registry.yarnpkg.com/mysql2/-/mysql2-2.3.2.tgz#3efe9814dbf1c2a3d7c2a1fc4666235939943ff9"
   integrity sha512-JUSA50rt/nSew8aq8xe3pRk5Q4y/M5QdSJn7Ey3ndOlPp2KXuialQ0sS35DNhPT5Z5PnOiIwSSQvKkl1WorqRA==
   dependencies:
     denque "^2.0.1"

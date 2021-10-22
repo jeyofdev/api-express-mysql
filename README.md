@@ -30,6 +30,10 @@ Create .env file based on .env.example and modify variables if needed.
 
 ```sh
 PORT=your_port
+DB_HOST=your_host
+DB_USER=your_username
+DB_PASS=your_passwword
+DB_NAME=your_database_name
 ```
 
 ### Scripts
