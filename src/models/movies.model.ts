@@ -11,6 +11,15 @@ export interface IMovie extends RowDataPacket {
   type: string;
 }
 
+export interface IMovieUpdate {
+  title?: string;
+  director?: string;
+  year?: number;
+  rating?: number;
+  duration?: number;
+  type?: string;
+}
+
 /*
  * Get all movies
  */
@@ -39,6 +48,18 @@ export const findByTitle = (title: string) =>
     .then((result) => result[0][0]);
 
 /*
+ * Get movie By title with different Id
+ */
+export const findByTitleWithDifferentId = (id: string, title: string) =>
+  dbConnection
+    .promise()
+    .query<IMovie[]>('SELECT * FROM movie WHERE title = ? AND id <> ?', [
+      title,
+      id,
+    ])
+    .then((result) => result[0][0]);
+
+/*
  * Post new movie
  */
 export const save = ({
@@ -56,6 +77,15 @@ export const save = ({
       [title, director, year, rating, duration, type]
     )
     .then((result) => result[0].insertId);
+
+/*
+ * Update user
+ */
+export const updateById = (id: string, body: IMovieUpdate) =>
+  dbConnection
+    .promise()
+    .query('UPDATE movie SET ? WHERE id = ?', [body, id])
+    .then((result) => result);
 
 /*
  * Delete movie by Id
