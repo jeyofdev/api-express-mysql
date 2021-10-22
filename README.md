@@ -2,9 +2,9 @@
 
 ## Features
 
--   ![NodeJS](https://img.shields.io/badge/NODE.JS-black?style=plastic&logo=node.js)
--   ![Express.js](https://img.shields.io/badge/EXPRESS.JS-black?style=plastic&logo=express)
--   ![Mysql](https://img.shields.io/badge/MYSQL-black?style=plastic&logo=mysql)
+- ![NodeJS](https://img.shields.io/badge/NODE.JS-black?style=plastic&logo=node.js)
+- ![Express.js](https://img.shields.io/badge/EXPRESS.JS-black?style=plastic&logo=express)
+- ![Mysql](https://img.shields.io/badge/MYSQL-black?style=plastic&logo=mysql)
 
 ## Getting starting
 
@@ -22,6 +22,14 @@ Install all dependencies :
 
 ```sh
 $ yarn install
+```
+
+### Environment
+
+Create .env file based on .env.example and modify variables if needed.
+
+```sh
+PORT=your_port
 ```
 
 ### Scripts
