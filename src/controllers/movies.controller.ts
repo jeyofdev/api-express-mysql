@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import {
   deleteById,
   findAll,
@@ -8,11 +7,12 @@ import {
   save,
   updateById,
 } from '../models/movies.model.js';
+import { RouteCallback } from '../types/index.js';
 
 /**
  * Get all movies
  */
-export const findAllMovies = (req: Request, res: Response) => {
+export const findAllMovies: RouteCallback = (_, res) => {
   findAll()
     .then((results) => {
       if (results.length < 1) {
@@ -29,10 +29,10 @@ export const findAllMovies = (req: Request, res: Response) => {
     });
 };
 
-/*
+/**
  * Get movie By Id
  */
-export const findMovieById = (req: Request, res: Response) => {
+export const findMovieById: RouteCallback = (req, res) => {
   const { id } = req.params;
 
   findById(id)
@@ -51,23 +51,22 @@ export const findMovieById = (req: Request, res: Response) => {
     });
 };
 
-/*
+/**
  * Post new movie
  */
-export const saveMovie = (req: Request, res: Response) => {
+export const saveMovie: RouteCallback = (req, res) => {
   const { title } = req.body;
 
   findByTitle(title)
-    .then((result) => {
+    .then(async (result) => {
       if (result) {
         return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
       }
 
-      return save(req.body).then((postId) => {
-        res.status(201).json({
-          id: postId,
-          ...req.body,
-        });
+      const postId = await save(req.body);
+      return res.status(201).json({
+        id: postId,
+        ...req.body,
       });
     })
     .catch((err) => {
@@ -81,15 +80,15 @@ export const saveMovie = (req: Request, res: Response) => {
     });
 };
 
-/*
+/**
  * Update movie
  */
-export const updateMovie = (req: Request, res: Response) => {
+export const updateMovie: RouteCallback = (req, res) => {
   const { id } = req.params;
 
   Promise.all([findById(id), findByTitleWithDifferentId(id, req.body.title)])
 
-    .then(([movie, otherUserWithTitle]) => {
+    .then(async ([movie, otherUserWithTitle]) => {
       if (!movie) {
         return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors
       }
@@ -98,9 +97,8 @@ export const updateMovie = (req: Request, res: Response) => {
         return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
       }
 
-      return updateById(id, req.body).then(() => {
-        res.status(200).json({ data: { old: movie, new: req.body } });
-      });
+      await updateById(id, req.body);
+      return res.status(200).json({ data: { old: movie, new: req.body } });
     })
     .catch((err) => {
       if (err === 'NO_MOVIE_FOUND') {
@@ -115,10 +113,10 @@ export const updateMovie = (req: Request, res: Response) => {
     });
 };
 
-/*
+/**
  * Delete movie by Id
  */
-export const deleteMovieById = (req: Request, res: Response) => {
+export const deleteMovieById: RouteCallback = (req, res) => {
   const { id } = req.params;
 
   deleteById(id)

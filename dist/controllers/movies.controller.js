@@ -1,8 +1,17 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { deleteById, findAll, findById, findByTitle, findByTitleWithDifferentId, save, updateById, } from '../models/movies.model.js';
 /**
  * Get all movies
  */
-export const findAllMovies = (req, res) => {
+export const findAllMovies = (_, res) => {
     findAll()
         .then((results) => {
         if (results.length < 1) {
@@ -19,7 +28,7 @@ export const findAllMovies = (req, res) => {
         }
     });
 };
-/*
+/**
  * Get movie By Id
  */
 export const findMovieById = (req, res) => {
@@ -40,20 +49,19 @@ export const findMovieById = (req, res) => {
         }
     });
 };
-/*
+/**
  * Post new movie
  */
 export const saveMovie = (req, res) => {
     const { title } = req.body;
     findByTitle(title)
-        .then((result) => {
+        .then((result) => __awaiter(void 0, void 0, void 0, function* () {
         if (result) {
             return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
         }
-        return save(req.body).then((postId) => {
-            res.status(201).json(Object.assign({ id: postId }, req.body));
-        });
-    })
+        const postId = yield save(req.body);
+        return res.status(201).json(Object.assign({ id: postId }, req.body));
+    }))
         .catch((err) => {
         if (err === 'DUPLICATE_MOVIE') {
             res
@@ -65,23 +73,22 @@ export const saveMovie = (req, res) => {
         }
     });
 };
-/*
+/**
  * Update movie
  */
 export const updateMovie = (req, res) => {
     const { id } = req.params;
     Promise.all([findById(id), findByTitleWithDifferentId(id, req.body.title)])
-        .then(([movie, otherUserWithTitle]) => {
+        .then(([movie, otherUserWithTitle]) => __awaiter(void 0, void 0, void 0, function* () {
         if (!movie) {
             return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors
         }
         if (otherUserWithTitle) {
             return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
         }
-        return updateById(id, req.body).then(() => {
-            res.status(200).json({ data: { old: movie, new: req.body } });
-        });
-    })
+        yield updateById(id, req.body);
+        return res.status(200).json({ data: { old: movie, new: req.body } });
+    }))
         .catch((err) => {
         if (err === 'NO_MOVIE_FOUND') {
             res.status(409).json({ message: 'Movie not found' });
@@ -96,7 +103,7 @@ export const updateMovie = (req, res) => {
         }
     });
 };
-/*
+/**
  * Delete movie by Id
  */
 export const deleteMovieById = (req, res) => {

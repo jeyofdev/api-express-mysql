@@ -1,26 +1,8 @@
-import { ResultSetHeader, RowDataPacket } from 'mysql2';
+import { ResultSetHeader } from 'mysql2';
 import dbConnection from '../config/db.config.js';
+import { IMovie, IMovieUpdate } from '../interfaces/index.js';
 
-export interface IMovie extends RowDataPacket {
-  id?: number;
-  title: string;
-  director: string;
-  year: number;
-  rating: number;
-  duration: number;
-  type: string;
-}
-
-export interface IMovieUpdate {
-  title?: string;
-  director?: string;
-  year?: number;
-  rating?: number;
-  duration?: number;
-  type?: string;
-}
-
-/*
+/**
  * Get all movies
  */
 export const findAll = () =>
@@ -29,7 +11,7 @@ export const findAll = () =>
     .query<IMovie[]>('SELECT * FROM movie')
     .then((results) => results[0]);
 
-/*
+/**
  * Get movie By Id
  */
 export const findById = (id: string) =>
@@ -38,7 +20,7 @@ export const findById = (id: string) =>
     .query<IMovie[]>('SELECT * FROM movie WHERE id = ?', [id])
     .then((result) => result[0][0]);
 
-/*
+/**
  * Get movie By title
  */
 export const findByTitle = (title: string) =>
@@ -47,7 +29,7 @@ export const findByTitle = (title: string) =>
     .query<IMovie[]>('SELECT * FROM movie WHERE title = ?', [title])
     .then((result) => result[0][0]);
 
-/*
+/**
  * Get movie By title with different Id
  */
 export const findByTitleWithDifferentId = (id: string, title: string) =>
@@ -59,7 +41,7 @@ export const findByTitleWithDifferentId = (id: string, title: string) =>
     ])
     .then((result) => result[0][0]);
 
-/*
+/**
  * Post new movie
  */
 export const save = ({
@@ -78,7 +60,7 @@ export const save = ({
     )
     .then((result) => result[0].insertId);
 
-/*
+/**
  * Update user
  */
 export const updateById = (id: string, body: IMovieUpdate) =>
@@ -87,7 +69,7 @@ export const updateById = (id: string, body: IMovieUpdate) =>
     .query('UPDATE movie SET ? WHERE id = ?', [body, id])
     .then((result) => result);
 
-/*
+/**
  * Delete movie by Id
  */
 export const deleteById = (id: string) =>
