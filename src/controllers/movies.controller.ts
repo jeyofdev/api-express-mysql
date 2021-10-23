@@ -55,9 +55,13 @@ export const findMovieById: RouteCallback = (req, res) => {
  * Post new movie
  */
 export const saveMovie: RouteCallback = (req, res) => {
+  if (!req.headers.cookie && !req.headers.authorization) {
+    return res.status(500).json({ error: 'Unauthorized user' });
+  }
+
   const { title } = req.body;
 
-  findByTitle(title)
+  return findByTitle(title)
     .then(async (result) => {
       if (result) {
         return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
@@ -86,10 +90,16 @@ export const saveMovie: RouteCallback = (req, res) => {
  * Update movie
  */
 export const updateMovie: RouteCallback = (req, res) => {
+  if (!req.headers.cookie && !req.headers.authorization) {
+    return res.status(500).json({ error: 'Unauthorized user' });
+  }
+
   const { id } = req.params;
 
-  Promise.all([findById(id), findByTitleWithDifferentId(id, req.body.title)])
-
+  return Promise.all([
+    findById(id),
+    findByTitleWithDifferentId(id, req.body.title),
+  ])
     .then(async ([movie, otherMovieWithTitle]) => {
       if (!movie) {
         return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors
@@ -119,9 +129,13 @@ export const updateMovie: RouteCallback = (req, res) => {
  * Delete movie by Id
  */
 export const deleteMovieById: RouteCallback = (req, res) => {
+  if (!req.headers.cookie && !req.headers.authorization) {
+    return res.status(500).json({ error: 'Unauthorized user' });
+  }
+
   const { id } = req.params;
 
-  deleteById(id)
+  return deleteById(id)
     .then((result) => {
       if (result.affectedRows < 1) {
         return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors

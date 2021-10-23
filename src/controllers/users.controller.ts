@@ -13,7 +13,11 @@ import { RouteCallback } from '../types/index.js';
  * Get users
  */
 export const findUsers: RouteCallback = (req, res) => {
-  find()
+  if (!req.headers.cookie && !req.headers.authorization) {
+    return res.status(500).json({ error: 'Unauthorized user' });
+  }
+
+  return find()
     .then((results) => {
       if (results.length < 1) {
         return Promise.reject('NO_USER_FOUND'); // eslint-disable-line prefer-promise-reject-errors
@@ -33,9 +37,13 @@ export const findUsers: RouteCallback = (req, res) => {
  * Get user By Id
  */
 export const findUserById: RouteCallback = (req, res) => {
+  if (!req.headers.cookie && !req.headers.authorization) {
+    return res.status(500).json({ error: 'Unauthorized user' });
+  }
+
   const { id } = req.params;
 
-  findById(id)
+  return findById(id)
     .then((result) => {
       if (!result) {
         return Promise.reject('NO_USER_FOUND'); // eslint-disable-line prefer-promise-reject-errors
@@ -89,9 +97,16 @@ export const saveUser: RouteCallback = (req, res) => {
  * Update user
  */
 export const updateUser: RouteCallback = (req, res) => {
+  if (!req.headers.cookie && !req.headers.authorization) {
+    return res.status(500).json({ error: 'Unauthorized user' });
+  }
+
   const { id } = req.params;
 
-  Promise.all([findById(id), findByEmailWithDifferentId(id, req.body.email)])
+  return Promise.all([
+    findById(id),
+    findByEmailWithDifferentId(id, req.body.email),
+  ])
 
     .then(async ([user, otherUserWithTitle]) => {
       if (!user) {
@@ -122,9 +137,13 @@ export const updateUser: RouteCallback = (req, res) => {
  * Delete user by Id
  */
 export const deleteUserById: RouteCallback = (req, res) => {
+  if (!req.headers.cookie && !req.headers.authorization) {
+    return res.status(500).json({ error: 'Unauthorized user' });
+  }
+
   const { id } = req.params;
 
-  deleteById(id)
+  return deleteById(id)
     .then((result) => {
       if (result.affectedRows < 1) {
         return Promise.reject('NO_USER_FOUND'); // eslint-disable-line prefer-promise-reject-errors

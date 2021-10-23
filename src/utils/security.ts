@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import {
   CalculateTokenType,
+  DecodeTokenType,
   HashPasswordType,
   VerifyPasswordType,
 } from '../types';
@@ -26,3 +27,6 @@ export const verifyPassword: VerifyPasswordType = (
 
 export const calculateToken: CalculateTokenType = (userEmail = '', userId) =>
   jwt.sign({ email: userEmail, id: userId }, `${process.env.PRIVATE_KEY}`);
+
+export const decodeToken: DecodeTokenType = (token: string) =>
+  jwt.decode(token);

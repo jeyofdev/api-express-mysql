@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Response } from 'express';
 import {
   findUsers,
   findUserById,
@@ -6,13 +6,39 @@ import {
   deleteUserById,
   updateUser,
 } from '../controllers/users.controller.js';
+import { decodeToken } from '../utils/security.js';
 
 const router = express.Router();
 
-router.get('/', findUsers);
-router.get('/:id', findUserById);
+/**
+ * Check if user token exist
+ */
+export const verifyToken = (req: any, res: Response, next: NextFunction) => {
+  // with cookie
+  if (req.headers.cookie) {
+    const token = req.headers.cookie.split('=')[1];
+    const datas = decodeToken(token);
+    req.userDatas = datas;
+  } else {
+    req.userDatas = '';
+  }
+
+  // with bearer
+  // if (req.headers.authorization) {
+  //   const token = req.headers.authorization.split(' ')[1];
+  //   const datas = decodeToken(token);
+  //   req.userDatas = datas;
+  // } else {
+  //   req.userDatas = '';
+  // }
+
+  next();
+};
+
+router.get('/', verifyToken, findUsers);
+router.get('/:id', verifyToken, findUserById);
 router.post('/', saveUser);
-router.put('/:id', updateUser);
-router.delete('/:id', deleteUserById);
+router.put('/:id', verifyToken, updateUser);
+router.delete('/:id', verifyToken, deleteUserById);
 
 export default router;

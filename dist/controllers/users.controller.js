@@ -12,7 +12,10 @@ import { deleteById, find, findById, findByEmail, findByEmailWithDifferentId, sa
  * Get users
  */
 export const findUsers = (req, res) => {
-    find()
+    if (!req.headers.cookie && !req.headers.authorization) {
+        return res.status(500).json({ error: 'Unauthorized user' });
+    }
+    return find()
         .then((results) => {
         if (results.length < 1) {
             return Promise.reject('NO_USER_FOUND'); // eslint-disable-line prefer-promise-reject-errors
@@ -32,8 +35,11 @@ export const findUsers = (req, res) => {
  * Get user By Id
  */
 export const findUserById = (req, res) => {
+    if (!req.headers.cookie && !req.headers.authorization) {
+        return res.status(500).json({ error: 'Unauthorized user' });
+    }
     const { id } = req.params;
-    findById(id)
+    return findById(id)
         .then((result) => {
         if (!result) {
             return Promise.reject('NO_USER_FOUND'); // eslint-disable-line prefer-promise-reject-errors
@@ -85,8 +91,14 @@ export const saveUser = (req, res) => {
  * Update user
  */
 export const updateUser = (req, res) => {
+    if (!req.headers.cookie && !req.headers.authorization) {
+        return res.status(500).json({ error: 'Unauthorized user' });
+    }
     const { id } = req.params;
-    Promise.all([findById(id), findByEmailWithDifferentId(id, req.body.email)])
+    return Promise.all([
+        findById(id),
+        findByEmailWithDifferentId(id, req.body.email),
+    ])
         .then(([user, otherUserWithTitle]) => __awaiter(void 0, void 0, void 0, function* () {
         if (!user) {
             return Promise.reject('NO_USER_FOUND'); // eslint-disable-line prefer-promise-reject-errors
@@ -115,8 +127,11 @@ export const updateUser = (req, res) => {
  * Delete user by Id
  */
 export const deleteUserById = (req, res) => {
+    if (!req.headers.cookie && !req.headers.authorization) {
+        return res.status(500).json({ error: 'Unauthorized user' });
+    }
     const { id } = req.params;
-    deleteById(id)
+    return deleteById(id)
         .then((result) => {
         if (result.affectedRows < 1) {
             return Promise.reject('NO_USER_FOUND'); // eslint-disable-line prefer-promise-reject-errors

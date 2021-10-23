@@ -12,3 +12,4 @@ export const hashPassword = (plainPassword) => argon2.hash(plainPassword, hashOp
 export const verifyPassword = (plainPassword, hashPassword // eslint-disable-line @typescript-eslint/no-shadow
 ) => argon2.verify(hashPassword, plainPassword, hashOptions);
 export const calculateToken = (userEmail = '', userId) => jwt.sign({ email: userEmail, id: userId }, `${process.env.PRIVATE_KEY}`);
+export const decodeToken = (token) => jwt.decode(token);

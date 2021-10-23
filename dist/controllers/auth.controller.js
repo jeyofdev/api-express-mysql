@@ -16,7 +16,7 @@ const login = (req, res) => {
                 return Promise.reject('INVALID_CREDENTIALS'); // eslint-disable-line prefer-promise-reject-errors
             }
             const token = calculateToken(email, user.id);
-            res.cookie('user_token', token);
+            res.cookie('userToken', token);
             return res.status(200).json({
                 message: `The user ${user.firstname} is logged in`,
                 token: calculateToken(user.email, user.id),
