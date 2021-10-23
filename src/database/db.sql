@@ -21,3 +21,19 @@ INSERT INTO movie (title, director, year, rating, duration, type) VALUES
   ('The Matrix', 'Wachowski brothers', '1999', 8.7, 136, 'Sci-Fi'),
   ('Interstellar', 'Christopher Nolan', '2014', 8.6, 169, 'Sci-Fi'),
   ('The Dark Knight', 'Christopher Nolan', '2008', 9.0, 152, 'Action');
+
+DROP TABLE IF EXISTS user;
+CREATE TABLE `user`
+(
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `firstname` varchar(50) NOT NULL,
+  `lastname` varchar(50) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO user (email, firstname, lastname, city) VALUES
+  ('john.doe@example.com', 'John', 'Doe', 'London'),
+  ('jane.doe@example.com', 'Jane', 'Doe', 'New-york'),
+  ('Bob.doe@example.com', 'Bob', 'Doe', 'Paris');
