@@ -1,6 +1,7 @@
 import { ResultSetHeader } from 'mysql2';
 import dbConnection from '../config/db.config.js';
 import { IUser, IUserUpdate } from '../interfaces/index.js';
+import { hashPassword } from '../utils/security.js';
 
 /**
  * Get all users
@@ -44,14 +45,16 @@ export const findByEmailWithDifferentId = (id: string, email: string) =>
 /**
  * Post new user
  */
-export const save = ({ email, firstname, lastname, city }: IUser) =>
-  dbConnection
-    .promise()
-    .query<ResultSetHeader>(
-      'INSERT INTO user (email, firstname, lastname, city) VALUES (?, ?, ?, ?)',
-      [email, firstname, lastname, city]
-    )
-    .then((result) => result[0].insertId);
+export const save = ({ email, firstname, lastname, city, password }: IUser) =>
+  hashPassword(password).then((hashedPassword) =>
+    dbConnection
+      .promise()
+      .query<ResultSetHeader>(
+        'INSERT INTO user (email, firstname, lastname, city, password) VALUES (?, ?, ?, ?, ?)',
+        [email, firstname, lastname, city, hashedPassword]
+      )
+      .then((result) => result[0].insertId)
+  );
 
 /**
  * Update user

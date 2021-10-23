@@ -55,7 +55,7 @@ export const findUserById: RouteCallback = (req, res) => {
  * Post new user
  */
 export const saveUser: RouteCallback = (req, res) => {
-  const { email } = req.body;
+  const { email, firstname, lastname, city } = req.body;
 
   findByEmail(email)
     .then(async (result) => {
@@ -67,7 +67,10 @@ export const saveUser: RouteCallback = (req, res) => {
       return res.status(201).json({
         result: {
           id: postId,
-          ...req.body,
+          email,
+          firstname,
+          lastname,
+          city,
         },
       });
     })

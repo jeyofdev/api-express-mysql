@@ -30,10 +30,11 @@ CREATE TABLE `user`
   `firstname` varchar(50) NOT NULL,
   `lastname` varchar(50) NOT NULL,
   `city` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO user (email, firstname, lastname, city) VALUES
-  ('john.doe@example.com', 'John', 'Doe', 'London'),
-  ('jane.doe@example.com', 'Jane', 'Doe', 'New-york'),
-  ('Bob.doe@example.com', 'Bob', 'Doe', 'Paris');
+INSERT INTO user (email, firstname, lastname, city, password) VALUES
+  ('john.doe@example.com', 'John', 'Doe', 'London', '$argon2id$v=19$m=16,t=2,p=1$emVmZXpmemZlemVmZWR6ZXplZg$rqZkhxu5YbqCGHPNrjJZpQ'),
+  ('jane.doe@example.com', 'Jane', 'Doe', 'New-york', '$argon2id$v=19$m=16,t=2,p=1$emVmZXpmemZlemVmZWR6ZXplZg$rqZkhxu5YbqCGHPNrjJZpQ'),
+  ('Bob.doe@example.com', 'Bob', 'Doe', 'Paris', '$argon2id$v=19$m=16,t=2,p=1$emVmZXpmemZlemVmZWR6ZXplZg$rqZkhxu5YbqCGHPNrjJZpQ');

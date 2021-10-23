@@ -53,7 +53,7 @@ export const findUserById = (req, res) => {
  * Post new user
  */
 export const saveUser = (req, res) => {
-    const { email } = req.body;
+    const { email, firstname, lastname, city } = req.body;
     findByEmail(email)
         .then((result) => __awaiter(void 0, void 0, void 0, function* () {
         if (result) {
@@ -61,7 +61,13 @@ export const saveUser = (req, res) => {
         }
         const postId = yield save(req.body);
         return res.status(201).json({
-            result: Object.assign({ id: postId }, req.body),
+            result: {
+                id: postId,
+                email,
+                firstname,
+                lastname,
+                city,
+            },
         });
     }))
         .catch((err) => {

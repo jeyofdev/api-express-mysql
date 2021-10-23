@@ -19,6 +19,7 @@
     "src/routes/**/*",
     "src/models/**/*",
     "src/controllers/**/*",
-    "src/interfaces/**/*"
+    "src/interfaces/**/*",
+    "src/utils/**/*"
   ]
 }

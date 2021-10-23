@@ -19,7 +19,7 @@ export declare const findByEmailWithDifferentId: (id: string, email: string) => 
 /**
  * Post new user
  */
-export declare const save: ({ email, firstname, lastname, city }: IUser) => Promise<number>;
+export declare const save: ({ email, firstname, lastname, city, password }: IUser) => Promise<number>;
 /**
  * Update user
  */

@@ -1,4 +1,5 @@
 import dbConnection from '../config/db.config.js';
+import { hashPassword } from '../utils/security.js';
 /**
  * Get all users
  */
@@ -33,10 +34,10 @@ export const findByEmailWithDifferentId = (id, email) => dbConnection
 /**
  * Post new user
  */
-export const save = ({ email, firstname, lastname, city }) => dbConnection
+export const save = ({ email, firstname, lastname, city, password }) => hashPassword(password).then((hashedPassword) => dbConnection
     .promise()
-    .query('INSERT INTO user (email, firstname, lastname, city) VALUES (?, ?, ?, ?)', [email, firstname, lastname, city])
-    .then((result) => result[0].insertId);
+    .query('INSERT INTO user (email, firstname, lastname, city, password) VALUES (?, ?, ?, ?, ?)', [email, firstname, lastname, city, hashedPassword])
+    .then((result) => result[0].insertId));
 /**
  * Update user
  */
