@@ -1,6 +1,6 @@
 import {
   deleteById,
-  findAll,
+  find,
   findById,
   findByTitle,
   findByTitleWithDifferentId,
@@ -10,10 +10,10 @@ import {
 import { RouteCallback } from '../types/index.js';
 
 /**
- * Get all movies
+ * Get movies
  */
-export const findAllMovies: RouteCallback = (_, res) => {
-  findAll()
+export const findMovies: RouteCallback = (req, res) => {
+  find(req.query)
     .then((results) => {
       if (results.length < 1) {
         return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors

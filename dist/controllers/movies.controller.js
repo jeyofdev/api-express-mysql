@@ -7,12 +7,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { deleteById, findAll, findById, findByTitle, findByTitleWithDifferentId, save, updateById, } from '../models/movies.model.js';
+import { deleteById, find, findById, findByTitle, findByTitleWithDifferentId, save, updateById, } from '../models/movies.model.js';
 /**
  * Get all movies
  */
-export const findAllMovies = (_, res) => {
-    findAll()
+export const findMovies = (req, res) => {
+    find(req.query)
         .then((results) => {
         if (results.length < 1) {
             return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors

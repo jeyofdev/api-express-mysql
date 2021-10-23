@@ -1,9 +1,10 @@
 import { ResultSetHeader } from 'mysql2';
 import { IMovie, IMovieUpdate } from '../interfaces/index.js';
+import { FindType } from '../types/index.js';
 /**
  * Get all movies
  */
-export declare const findAll: () => Promise<IMovie[]>;
+export declare const find: FindType;
 /**
  * Get movie By Id
  */

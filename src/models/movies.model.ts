@@ -1,15 +1,32 @@
 import { ResultSetHeader } from 'mysql2';
 import dbConnection from '../config/db.config.js';
 import { IMovie, IMovieUpdate } from '../interfaces/index.js';
+import { FindType } from '../types/index.js';
 
 /**
  * Get all movies
  */
-export const findAll = () =>
-  dbConnection
-    .promise()
-    .query<IMovie[]>('SELECT * FROM movie')
-    .then((results) => results[0]);
+export const find: FindType = async (filters) => {
+  // ?type=Sci-Fi&max_year=2000
+
+  let sql = 'SELECT * FROM movie';
+  const sqlValues = [];
+
+  if (filters.type) {
+    sql += ' WHERE type = ?';
+    sqlValues.push(filters.type);
+  }
+
+  if (filters.max_year) {
+    if (filters.type) sql += ' AND year <= ? ;';
+    else sql += ' WHERE year <= ?';
+
+    sqlValues.push(filters.max_year);
+  }
+
+  const results = await dbConnection.promise().query<IMovie[]>(sql, sqlValues);
+  return results[0];
+};
 
 /**
  * Get movie By Id

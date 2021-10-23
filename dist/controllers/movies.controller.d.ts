@@ -2,7 +2,7 @@ import { RouteCallback } from '../types/index.js';
 /**
  * Get all movies
  */
-export declare const findAllMovies: RouteCallback;
+export declare const findMovies: RouteCallback;
 /**
  * Get movie By Id
  */
