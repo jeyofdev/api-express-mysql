@@ -65,8 +65,10 @@ export const saveMovie: RouteCallback = (req, res) => {
 
       const postId = await save(req.body);
       return res.status(201).json({
-        id: postId,
-        ...req.body,
+        result: {
+          id: postId,
+          ...req.body,
+        },
       });
     })
     .catch((err) => {
@@ -88,12 +90,12 @@ export const updateMovie: RouteCallback = (req, res) => {
 
   Promise.all([findById(id), findByTitleWithDifferentId(id, req.body.title)])
 
-    .then(async ([movie, otherUserWithTitle]) => {
+    .then(async ([movie, otherMovieWithTitle]) => {
       if (!movie) {
         return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors
       }
 
-      if (otherUserWithTitle) {
+      if (otherMovieWithTitle) {
         return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
       }
 
@@ -134,7 +136,7 @@ export const deleteMovieById: RouteCallback = (req, res) => {
       if (err === 'NO_MOVIE_FOUND') {
         res.status(200).send({ message: 'Movie not found' });
       } else {
-        res.status(500).send({ error: 'Error deleting an user' });
+        res.status(500).send({ error: 'Error deleting an movie' });
       }
     });
 };

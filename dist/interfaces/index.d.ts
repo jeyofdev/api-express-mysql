@@ -9,3 +9,11 @@ export interface IMovieUpdate {
     duration?: number;
     type?: string;
 }
+export interface IUser extends RowDataPacket, IUserUpdate {
+}
+export interface IUserUpdate {
+    email?: string;
+    firstname?: string;
+    lastname?: string;
+    city?: string;
+}

@@ -1,8 +1,17 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import dbConnection from '../config/db.config.js';
 /**
  * Get all movies
  */
-export const find = (filters) => {
+export const find = (filters) => __awaiter(void 0, void 0, void 0, function* () {
     // ?type=Sci-Fi&max_year=2000
     let sql = 'SELECT * FROM movie';
     const sqlValues = [];
@@ -17,11 +26,9 @@ export const find = (filters) => {
             sql += ' WHERE year <= ?';
         sqlValues.push(filters.max_year);
     }
-    return dbConnection
-        .promise()
-        .query(sql, sqlValues)
-        .then((results) => results[0]);
-};
+    const results = yield dbConnection.promise().query(sql, sqlValues);
+    return results[0];
+});
 /**
  * Get movie By Id
  */
@@ -54,7 +61,7 @@ export const save = ({ title, director, year, rating, duration, type, }) => dbCo
     .query('INSERT INTO movie (title, director, year, rating, duration, type) VALUES (?, ?, ?, ?, ?, ?)', [title, director, year, rating, duration, type])
     .then((result) => result[0].insertId);
 /**
- * Update movie
+ * Update user
  */
 export const updateById = (id, body) => dbConnection
     .promise()

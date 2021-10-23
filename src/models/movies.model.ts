@@ -1,12 +1,12 @@
 import { ResultSetHeader } from 'mysql2';
 import dbConnection from '../config/db.config.js';
 import { IMovie, IMovieUpdate } from '../interfaces/index.js';
-import { FindType } from '../types/index.js';
+import { FindMovieType } from '../types/index.js';
 
 /**
  * Get all movies
  */
-export const find: FindType = async (filters) => {
+export const find: FindMovieType = (filters) => {
   // ?type=Sci-Fi&max_year=2000
 
   let sql = 'SELECT * FROM movie';
@@ -24,8 +24,10 @@ export const find: FindType = async (filters) => {
     sqlValues.push(filters.max_year);
   }
 
-  const results = await dbConnection.promise().query<IMovie[]>(sql, sqlValues);
-  return results[0];
+  return dbConnection
+    .promise()
+    .query<IMovie[]>(sql, sqlValues)
+    .then((results) => results[0]);
 };
 
 /**
@@ -78,7 +80,7 @@ export const save = ({
     .then((result) => result[0].insertId);
 
 /**
- * Update user
+ * Update movie
  */
 export const updateById = (id: string, body: IMovieUpdate) =>
   dbConnection

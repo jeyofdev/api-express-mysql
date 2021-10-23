@@ -60,9 +60,7 @@ export const saveMovie = (req, res) => {
             return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
         }
         const postId = yield save(req.body);
-        return res.status(201).json({
-            result: Object.assign({ id: postId }, req.body),
-        });
+        return res.status(201).json(Object.assign({ id: postId }, req.body));
     }))
         .catch((err) => {
         if (err === 'DUPLICATE_MOVIE') {
@@ -81,11 +79,11 @@ export const saveMovie = (req, res) => {
 export const updateMovie = (req, res) => {
     const { id } = req.params;
     Promise.all([findById(id), findByTitleWithDifferentId(id, req.body.title)])
-        .then(([movie, otherMovieWithTitle]) => __awaiter(void 0, void 0, void 0, function* () {
+        .then(([movie, otherUserWithTitle]) => __awaiter(void 0, void 0, void 0, function* () {
         if (!movie) {
             return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors
         }
-        if (otherMovieWithTitle) {
+        if (otherUserWithTitle) {
             return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
         }
         yield updateById(id, req.body);
@@ -125,7 +123,7 @@ export const deleteMovieById = (req, res) => {
             res.status(200).send({ message: 'Movie not found' });
         }
         else {
-            res.status(500).send({ error: 'Error deleting an movie' });
+            res.status(500).send({ error: 'Error deleting an user' });
         }
     });
 };
