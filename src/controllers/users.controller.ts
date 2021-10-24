@@ -14,7 +14,7 @@ import { userValidation } from '../utils/validation.js';
  */
 export const findUsers: RouteCallback = (req, res) => {
   if (!req.headers.cookie && !req.headers.authorization) {
-    return res.status(500).json({ error: 'Unauthorized user' });
+    return res.status(401).json({ error: 'Unauthorized user' });
   }
 
   return find('user')
@@ -38,7 +38,7 @@ export const findUsers: RouteCallback = (req, res) => {
  */
 export const findUserById: RouteCallback = (req, res) => {
   if (!req.headers.cookie && !req.headers.authorization) {
-    return res.status(500).json({ error: 'Unauthorized user' });
+    return res.status(401).json({ error: 'Unauthorized user' });
   }
 
   const { id } = req.params;
@@ -106,7 +106,7 @@ export const saveUser: RouteCallback = (req, res) => {
  */
 export const updateUser: RouteCallback = (req, res) => {
   if (!req.headers.cookie && !req.headers.authorization) {
-    return res.status(500).json({ error: 'Unauthorized user' });
+    return res.status(401).json({ error: 'Unauthorized user' });
   }
 
   const { id } = req.params;
@@ -154,7 +154,7 @@ export const updateUser: RouteCallback = (req, res) => {
  */
 export const deleteUserById: RouteCallback = (req, res) => {
   if (!req.headers.cookie && !req.headers.authorization) {
-    return res.status(500).json({ error: 'Unauthorized user' });
+    return res.status(401).json({ error: 'Unauthorized user' });
   }
 
   const { id } = req.params;

@@ -59,7 +59,7 @@ export const findMovieById: RouteCallback = (req, res) => {
  */
 export const saveMovie: RouteCallback = (req, res) => {
   if (!req.headers.cookie && !req.headers.authorization) {
-    return res.status(500).json({ error: 'Unauthorized user' });
+    return res.status(401).json({ error: 'Unauthorized user' });
   }
 
   const { title } = req.body;
@@ -102,7 +102,7 @@ export const saveMovie: RouteCallback = (req, res) => {
  */
 export const updateMovie: RouteCallback = (req, res) => {
   if (!req.headers.cookie && !req.headers.authorization) {
-    return res.status(500).json({ error: 'Unauthorized user' });
+    return res.status(401).json({ error: 'Unauthorized user' });
   }
 
   const { id } = req.params;
@@ -149,7 +149,7 @@ export const updateMovie: RouteCallback = (req, res) => {
  */
 export const deleteMovieById: RouteCallback = (req, res) => {
   if (!req.headers.cookie && !req.headers.authorization) {
-    return res.status(500).json({ error: 'Unauthorized user' });
+    return res.status(401).json({ error: 'Unauthorized user' });
   }
 
   const { id } = req.params;
