@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import Joi from 'joi';
 import jwt from 'jsonwebtoken';
 import { FieldPacket, ResultSetHeader } from 'mysql2';
 import { IMovie, IMovieUpdate, IUser, IUserUpdate } from '../interfaces';
@@ -49,3 +50,8 @@ export type DeleteByIdType = (
   id: string,
   tableSql: string
 ) => Promise<ResultSetHeader>;
+
+export type ValidationType = (
+  datas: IUser | IMovie,
+  forPost?: boolean
+) => Joi.ValidationError | undefined;

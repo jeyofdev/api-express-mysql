@@ -7,6 +7,7 @@ import {
 } from '../models/generics.model.js';
 import { findByEmailWithDifferentId, save } from '../models/users.model.js';
 import { RouteCallback } from '../@types/types/index.js';
+import { userValidation } from '../utils/validation.js';
 
 /**
  * Get users
@@ -63,11 +64,17 @@ export const findUserById: RouteCallback = (req, res) => {
  */
 export const saveUser: RouteCallback = (req, res) => {
   const { email, firstname, lastname, city } = req.body;
+  let validationErrors: string | object | null | undefined = null;
 
   findBy('email', email, 'user')
     .then(async (result) => {
       if (result) {
         return Promise.reject('DUPLICATE_EMAIL'); // eslint-disable-line prefer-promise-reject-errors
+      }
+
+      validationErrors = userValidation(req.body);
+      if (validationErrors) {
+        return Promise.reject('INVALID_DATA'); // eslint-disable-line prefer-promise-reject-errors
       }
 
       const postId = await save(req.body);
@@ -86,8 +93,10 @@ export const saveUser: RouteCallback = (req, res) => {
         res
           .status(409)
           .json({ message: 'This user is already in the database' });
+      } else if (err === 'INVALID_DATA') {
+        res.status(422).json({ validationErrors });
       } else {
-        res.status(500).send({ error: 'Error saving the user', err });
+        res.status(500).send({ error: 'Error saving the user' });
       }
     });
 };
@@ -101,6 +110,7 @@ export const updateUser: RouteCallback = (req, res) => {
   }
 
   const { id } = req.params;
+  let validationErrors: string | object | null | undefined = null;
 
   return Promise.all([
     findById(id, 'user'),
@@ -116,6 +126,11 @@ export const updateUser: RouteCallback = (req, res) => {
         return Promise.reject('DUPLICATE_EMAIL'); // eslint-disable-line prefer-promise-reject-errors
       }
 
+      validationErrors = userValidation(req.body, false);
+      if (validationErrors) {
+        return Promise.reject('INVALID_DATA'); // eslint-disable-line prefer-promise-reject-errors
+      }
+
       await updateById(id, req.body, 'user');
       return res.status(200).json({ data: { old: user, new: req.body } });
     })
@@ -126,6 +141,8 @@ export const updateUser: RouteCallback = (req, res) => {
         res
           .status(409)
           .json({ message: 'This email is already used by other user' });
+      } else if (err === 'INVALID_DATA') {
+        res.status(422).json({ validationErrors });
       } else {
         res.status(500).send({ error: 'Error update the user' });
       }

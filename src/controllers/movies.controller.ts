@@ -10,6 +10,7 @@ import {
   save,
 } from '../models/movies.model.js';
 import { RouteCallback } from '../@types/types/index.js';
+import { movieValidation } from '../utils/validation.js';
 
 /**
  * Get movies
@@ -62,11 +63,17 @@ export const saveMovie: RouteCallback = (req, res) => {
   }
 
   const { title } = req.body;
+  let validationErrors: string | object | null | undefined = null;
 
   return findBy('title', title, 'movie')
     .then(async (result) => {
       if (result) {
         return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
+      }
+
+      validationErrors = movieValidation(req.body);
+      if (validationErrors) {
+        return Promise.reject('INVALID_DATA'); // eslint-disable-line prefer-promise-reject-errors
       }
 
       const postId = await save(req.body);
@@ -82,6 +89,8 @@ export const saveMovie: RouteCallback = (req, res) => {
         res
           .status(409)
           .json({ message: 'This movie is already in the database' });
+      } else if (err === 'INVALID_DATA') {
+        res.status(422).json({ validationErrors });
       } else {
         res.status(500).send({ error: 'Error saving the movie' });
       }
@@ -97,6 +106,7 @@ export const updateMovie: RouteCallback = (req, res) => {
   }
 
   const { id } = req.params;
+  let validationErrors: string | object | null | undefined = null;
 
   return Promise.all([
     findById(id, 'movie'),
@@ -111,6 +121,11 @@ export const updateMovie: RouteCallback = (req, res) => {
         return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
       }
 
+      validationErrors = movieValidation(req.body, false);
+      if (validationErrors) {
+        return Promise.reject('INVALID_DATA'); // eslint-disable-line prefer-promise-reject-errors
+      }
+
       await updateById(id, req.body, 'movie');
       return res.status(200).json({ data: { old: movie, new: req.body } });
     })
@@ -121,6 +136,8 @@ export const updateMovie: RouteCallback = (req, res) => {
         res
           .status(409)
           .json({ message: 'This movie is already in the database' });
+      } else if (err === 'INVALID_DATA') {
+        res.status(422).json({ validationErrors });
       } else {
         res.status(500).send({ error: 'Error update the movie' });
       }
