@@ -59,6 +59,7 @@ $RECYCLE.BIN/
 !.yarn/sdks
 !.yarn/versions
 yarn.error
+yarn-error.log
 
 # if you are NOT using Zero-installs, then:
 # comment the following lines
