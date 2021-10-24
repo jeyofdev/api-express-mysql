@@ -1,13 +1,12 @@
 import {
-  deleteById,
   find,
   findById,
-  findByEmail,
-  findByEmailWithDifferentId,
-  save,
+  findBy,
   updateById,
-} from '../models/users.model.js';
-import { RouteCallback } from '../types/index.js';
+  deleteById,
+} from '../models/generics.model.js';
+import { findByEmailWithDifferentId, save } from '../models/users.model.js';
+import { RouteCallback } from '../@types/types/index.js';
 
 /**
  * Get users
@@ -17,7 +16,7 @@ export const findUsers: RouteCallback = (req, res) => {
     return res.status(500).json({ error: 'Unauthorized user' });
   }
 
-  return find()
+  return find('user')
     .then((results) => {
       if (results.length < 1) {
         return Promise.reject('NO_USER_FOUND'); // eslint-disable-line prefer-promise-reject-errors
@@ -43,7 +42,7 @@ export const findUserById: RouteCallback = (req, res) => {
 
   const { id } = req.params;
 
-  return findById(id)
+  return findById(id, 'user')
     .then((result) => {
       if (!result) {
         return Promise.reject('NO_USER_FOUND'); // eslint-disable-line prefer-promise-reject-errors
@@ -65,7 +64,7 @@ export const findUserById: RouteCallback = (req, res) => {
 export const saveUser: RouteCallback = (req, res) => {
   const { email, firstname, lastname, city } = req.body;
 
-  findByEmail(email)
+  findBy('email', email, 'user')
     .then(async (result) => {
       if (result) {
         return Promise.reject('DUPLICATE_EMAIL'); // eslint-disable-line prefer-promise-reject-errors
@@ -88,7 +87,7 @@ export const saveUser: RouteCallback = (req, res) => {
           .status(409)
           .json({ message: 'This user is already in the database' });
       } else {
-        res.status(500).send({ error: 'Error saving the user' });
+        res.status(500).send({ error: 'Error saving the user', err });
       }
     });
 };
@@ -104,7 +103,7 @@ export const updateUser: RouteCallback = (req, res) => {
   const { id } = req.params;
 
   return Promise.all([
-    findById(id),
+    findById(id, 'user'),
     findByEmailWithDifferentId(id, req.body.email),
   ])
 
@@ -117,7 +116,7 @@ export const updateUser: RouteCallback = (req, res) => {
         return Promise.reject('DUPLICATE_EMAIL'); // eslint-disable-line prefer-promise-reject-errors
       }
 
-      await updateById(id, req.body);
+      await updateById(id, req.body, 'user');
       return res.status(200).json({ data: { old: user, new: req.body } });
     })
     .catch((err) => {
@@ -143,7 +142,7 @@ export const deleteUserById: RouteCallback = (req, res) => {
 
   const { id } = req.params;
 
-  return deleteById(id)
+  return deleteById(id, 'user')
     .then((result) => {
       if (result.affectedRows < 1) {
         return Promise.reject('NO_USER_FOUND'); // eslint-disable-line prefer-promise-reject-errors

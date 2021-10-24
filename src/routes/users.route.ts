@@ -13,7 +13,11 @@ const router = express.Router();
 /**
  * Check if user token exist
  */
-export const verifyToken = (req: any, res: Response, next: NextFunction) => {
+export const verifyToken = (
+  req: any,
+  res: Response,
+  next: NextFunction
+): void => {
   // with cookie
   if (req.headers.cookie) {
     const token = req.headers.cookie.split('=')[1];

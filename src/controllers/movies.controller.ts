@@ -1,13 +1,15 @@
 import {
-  deleteById,
-  find,
+  findBy,
   findById,
-  findByTitle,
+  updateById,
+  deleteById,
+} from '../models/generics.model.js';
+import {
+  find,
   findByTitleWithDifferentId,
   save,
-  updateById,
 } from '../models/movies.model.js';
-import { RouteCallback } from '../types/index.js';
+import { RouteCallback } from '../@types/types/index.js';
 
 /**
  * Get movies
@@ -35,7 +37,7 @@ export const findMovies: RouteCallback = (req, res) => {
 export const findMovieById: RouteCallback = (req, res) => {
   const { id } = req.params;
 
-  findById(id)
+  findById(id, 'movie')
     .then((result) => {
       if (!result) {
         return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors
@@ -61,7 +63,7 @@ export const saveMovie: RouteCallback = (req, res) => {
 
   const { title } = req.body;
 
-  return findByTitle(title)
+  return findBy('title', title, 'movie')
     .then(async (result) => {
       if (result) {
         return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
@@ -97,7 +99,7 @@ export const updateMovie: RouteCallback = (req, res) => {
   const { id } = req.params;
 
   return Promise.all([
-    findById(id),
+    findById(id, 'movie'),
     findByTitleWithDifferentId(id, req.body.title),
   ])
     .then(async ([movie, otherMovieWithTitle]) => {
@@ -109,7 +111,7 @@ export const updateMovie: RouteCallback = (req, res) => {
         return Promise.reject('DUPLICATE_MOVIE'); // eslint-disable-line prefer-promise-reject-errors
       }
 
-      await updateById(id, req.body);
+      await updateById(id, req.body, 'movie');
       return res.status(200).json({ data: { old: movie, new: req.body } });
     })
     .catch((err) => {
@@ -135,7 +137,7 @@ export const deleteMovieById: RouteCallback = (req, res) => {
 
   const { id } = req.params;
 
-  return deleteById(id)
+  return deleteById(id, 'movie')
     .then((result) => {
       if (result.affectedRows < 1) {
         return Promise.reject('NO_MOVIE_FOUND'); // eslint-disable-line prefer-promise-reject-errors

@@ -66,3 +66,6 @@ yarn.error
 
 # modules
 /node_modules/
+
+# build
+/dist

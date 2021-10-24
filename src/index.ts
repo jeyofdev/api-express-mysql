@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import dbConnection from './config/db.config.js';
 import routes from './routes/index.js';
@@ -26,12 +26,12 @@ dbConnection.connect((err) => {
 });
 
 // Routes
-app.get('/', (_, res) => {
+app.get('/', (_: Request, res: Response) => {
   res.status(200).json({ message: 'Welcome to API' });
 });
 
 // Route 404
-app.use((_, res) => {
+app.use((_: Request, res: Response) => {
   res.status(404).send({ error: 'Route not found' });
 });
 

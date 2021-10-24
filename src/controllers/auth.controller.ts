@@ -1,5 +1,5 @@
-import * as User from '../models/users.model.js';
-import { RouteCallback } from '../types/index.js';
+import * as Generic from '../models/generics.model.js';
+import { RouteCallback } from '../@types/types/index.js';
 import { calculateToken, verifyPassword } from '../utils/security.js';
 
 /*
@@ -8,7 +8,7 @@ import { calculateToken, verifyPassword } from '../utils/security.js';
 const login: RouteCallback = (req, res) => {
   const { email, password } = req.body;
 
-  User.findByEmail(email)
+  Generic.findBy('email', email, 'user')
     .then((user) => {
       if (!user) {
         return Promise.reject('INVALID_CREDENTIALS'); // eslint-disable-line prefer-promise-reject-errors
