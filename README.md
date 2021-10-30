@@ -6,6 +6,8 @@
 - ![Express.js](https://img.shields.io/badge/EXPRESS.JS-black?style=plastic&logo=express)
 - ![Mysql](https://img.shields.io/badge/MYSQL-black?style=plastic&logo=mysql)
 - ![JWT](https://img.shields.io/badge/JWT-black?style=plastic&logo=JSON%20web%20tokens)
+- ![EsLint](https://img.shields.io/badge/ESLint-black?style=plastic&logo=eslint)
+- ![TypeScript](https://img.shields.io/badge/typescript-black?style=plastic&logo=typescript)
 
 ## Getting starting
 
@@ -96,6 +98,21 @@ Get movie or user by id
 ```
 
 #### POST
+
+Login user
+
+```
+POST /api/auth/login
+```
+
+Example body :
+
+```javascript
+{
+    "email": "john.doe@gmail.com",
+    "password": "12345"
+}
+```
 
 Post new movie or new user
 
